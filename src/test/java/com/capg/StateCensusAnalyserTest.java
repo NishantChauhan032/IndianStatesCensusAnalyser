@@ -38,4 +38,17 @@ public class StateCensusAnalyserTest {
 	}
 
 
+	@Test
+	public void givenRightCsvFile_ButWrongType_ShouldThrowCustomException() {
+		try {
+			StateCensusAnalyser stateCensusAnalyser = new StateCensusAnalyser();
+			ExpectedException exceptionRule = ExpectedException.none();
+			exceptionRule.expect(CensusAnalyserException.class);
+			stateCensusAnalyser.loadIndiaCensusData(WRONG_CENSUS_CSV_FILE_PATH);
+		} catch (CensusAnalyserException e) {
+			assertEquals(CensusAnalyserException.ExceptionType.INTERNAL_ISSUES_IN_CSV_FILE, e.type);
+		}
+	}
+	
+	 
 }
