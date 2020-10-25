@@ -25,48 +25,5 @@ public class StateCensusAnalyserTest {
 			e.getMessage();
 		}
 	}
-	@Test
-	public void givenWrongPath_ShouldThrow_CustomException() {
-		try {
-			StateCensusAnalyser stateCensusAnalyser = new StateCensusAnalyser();
-			ExpectedException exceptionRule = ExpectedException.none();
-			exceptionRule.expect(CensusAnalyserException.class);
-			stateCensusAnalyser.loadIndiaCensusData(CSV_DATA_FILE_WRONG_PATH);
-		} catch (CensusAnalyserException e) {
-			assertEquals(CensusAnalyserException.ExceptionType.FILE_NOT_FOUND, e.type);
-		}
-	}
-
-
-	@Test
-	public void givenRightCsvFile_ButWrongType_ShouldThrowCustomException() {
-		try {
-			StateCensusAnalyser stateCensusAnalyser = new StateCensusAnalyser();
-			ExpectedException exceptionRule = ExpectedException.none();
-			exceptionRule.expect(CensusAnalyserException.class);
-			stateCensusAnalyser.loadIndiaCensusData(WRONG_CENSUS_CSV_FILE_PATH);
-		} catch (CensusAnalyserException e) {
-			assertEquals(CensusAnalyserException.ExceptionType.INTERNAL_ISSUES_IN_CSV_FILE, e.type);
-		}
-	}
 	
-	  @Test
-	    public void givenDelimiterInIndiaCensusData_WhenWrong_ShouldThrowCustomException() {
-	        try {
-	        	StateCensusAnalyser stateCensusAnalyser = new StateCensusAnalyser();
-	            stateCensusAnalyser.loadIndiaCensusData(INDIAN_CENSUS_CSV_WRONG_DELIMITER);
-	        } catch (CensusAnalyserException e) {
-	            assertEquals(CensusAnalyserException.ExceptionType.INTERNAL_ISSUES_IN_CSV_FILE, e.type);
-	        }
-	    }
-	  
-	  @Test
-	    public void givenHeaderInIndiaCensusData_WhenMissing_ShouldThrowCustomException() {
-	        try {
-	        	StateCensusAnalyser stateCensusAnalyser = new StateCensusAnalyser();
-	            int numOfRecords = stateCensusAnalyser.loadIndiaCensusData(INDIAN_CENSUS_CSV_WRONG_DELIMITER);
-	        } catch (CensusAnalyserException e) {
-	            assertEquals(CensusAnalyserException.ExceptionType.INTERNAL_ISSUES_IN_CSV_FILE, e.type);
-	        }
-	    }
 }
