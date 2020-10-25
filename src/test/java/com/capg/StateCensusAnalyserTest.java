@@ -60,5 +60,13 @@ public class StateCensusAnalyserTest {
 	        }
 	    }
 	  
-	  
+	  @Test
+	    public void givenHeaderInIndiaCensusData_WhenMissing_ShouldThrowCustomException() {
+	        try {
+	        	StateCensusAnalyser stateCensusAnalyser = new StateCensusAnalyser();
+	            int numOfRecords = stateCensusAnalyser.loadIndiaCensusData(INDIAN_CENSUS_CSV_WRONG_DELIMITER);
+	        } catch (CensusAnalyserException e) {
+	            assertEquals(CensusAnalyserException.ExceptionType.INTERNAL_ISSUES_IN_CSV_FILE, e.type);
+	        }
+	    }
 }
