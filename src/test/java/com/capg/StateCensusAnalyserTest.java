@@ -25,5 +25,16 @@ public class StateCensusAnalyserTest {
 			e.getMessage();
 		}
 	}
-	
+	@Test
+	public void givenWrongPath_ShouldThrow_CustomException() {
+		try {
+			StateCensusAnalyser stateCensusAnalyser = new StateCensusAnalyser();
+			ExpectedException exceptionRule = ExpectedException.none();
+			exceptionRule.expect(CensusAnalyserException.class);
+			stateCensusAnalyser.loadIndiaCensusData(CSV_DATA_FILE_WRONG_PATH);
+		} catch (CensusAnalyserException e) {
+			assertEquals(CensusAnalyserException.ExceptionType.FILE_NOT_FOUND, e.type);
+		}
+	}
+
 }
