@@ -59,5 +59,20 @@ public class StateCensusAnalyser {
 		String sortedStateList = new Gson().toJson(sortedStateCensusList);
 		return sortedStateList;
 	}
+
+	public String getAreaWiseSortedCensusData(String STATE_CENSUS_DATA) throws CensusAnalyserException {
+		List<StateCensusData> stateCensusList = new StateCensusCSV().loadIndiaCensusData(STATE_CENSUS_DATA);
+		List<StateCensusData> sortedStateCensusList = stateCensusList.stream()
+				.sorted(Comparator.comparing(StateCensusData::getAreaInSqKm).reversed()).collect(Collectors.toList());
+		return toJson(sortedStateCensusList);
+	}
+
+	public List<StateCensusData> loadIndianCensuaData(String PATH) throws CensusAnalyserException {
+		return new StateCensusCSV().loadIndiaCensusData(PATH);
+	}
+
+	public <E> String toJson(List<E> list) {
+		return new Gson().toJson(list);
+	}
 }
 
