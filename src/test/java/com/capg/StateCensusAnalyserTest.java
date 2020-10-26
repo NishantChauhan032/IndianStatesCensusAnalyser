@@ -79,4 +79,15 @@ public class StateCensusAnalyserTest {
 			} catch (CensusAnalyserException e) {
 			}
 		}
+	  @Test
+		public void givenWrongCsvPath_InStateCodeData_ShouldThrow_CustomException() {
+			try {
+				StateCensusAnalyser stateCensusAnalyser = new StateCensusAnalyser();
+				ExpectedException exceptionRule = ExpectedException.none();
+				exceptionRule.expect(CensusAnalyserException.class);
+				stateCensusAnalyser.loadIndianStateCode(CSV_DATA_FILE_WRONG_PATH );
+			} catch (CensusAnalyserException e) {
+				assertEquals(CensusAnalyserException.ExceptionType.FILE_NOT_FOUND, e.type);
+			}
+		}
 }
