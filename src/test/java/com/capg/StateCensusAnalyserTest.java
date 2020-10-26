@@ -146,4 +146,14 @@ public class StateCensusAnalyserTest {
 		StateCensusData[] censusCSVfromFile = new Gson().fromJson(readCensuslist, StateCensusData[].class);
 		assertEquals(censusCSV.length, censusCSVfromFile.length);
 	}
+	@Test
+	public void givenStateCodeData_WhenSortedOnPopulationDensity_ShouldReturnSortedResult()
+			throws CensusAnalyserException {
+		String sortedCensusData = stateCensusAnalyser.getPopulationDensityWiseSortedCensusData(STATE_CENSUS_DATA_CSV_FILE_PATH);
+		new Json().writeList("populationDensity", sortedCensusData);
+		StateCensusData[] censusCSV = new Gson().fromJson(sortedCensusData, StateCensusData[].class);
+		assertEquals("Bihar", censusCSV[0].getState());
+		assertEquals("Arunachal Pradesh", censusCSV[censusCSV.length - 1].getState());
+	}
+
 }
