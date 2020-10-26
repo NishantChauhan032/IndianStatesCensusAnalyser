@@ -1,17 +1,32 @@
 package com.capg;
 
-public class StateCensusAnalyser 
-{
+import java.util.Comparator;
+import java.util.List;
+import java.util.stream.Collectors;
 
-	public StateCensusAnalyser() {}
+import com.google.gson.Gson;
+
+public class StateCensusAnalyser {
+
+	public StateCensusAnalyser() {
+
+	}
 
 	public int loadIndiaCensusData(String STATE_CSV_DATA) throws CensusAnalyserException {
-		return new StateCensusCSV().loadIndiaCensusData(STATE_CSV_DATA);
+		return new StateCensusCSV().loadIndiaCensusData(STATE_CSV_DATA).size();
 	}
-	public int loadIndianStateCode(String STATE_CODE_DATA) throws CensusAnalyserException{
-		return new StatesCSV().loadIndianStateCode(STATE_CODE_DATA);
+
+	public int loadIndianStateCode(String STATE_CODE_DATA) throws CensusAnalyserException {
+		return new StatesCSV().loadIndianStateCode(STATE_CODE_DATA).size();
 	}
-	public static void main(String[] args) {
-		System.out.println("Welcome to Indian States Census Analyser Program");
+
+	public String getStateWiseSortedCensusData(String STATE_CENSUS_DATA) throws CensusAnalyserException {
+		List<StateCensusData> stateCensusList = new StateCensusCSV().loadIndiaCensusData(STATE_CENSUS_DATA);
+		List<StateCensusData> sortedStateCensusList = stateCensusList.stream()
+								.sorted(Comparator.comparing(StateCensusData::getState))
+								.collect(Collectors.toList());
+		String sortedStateList = new Gson().toJson(sortedStateCensusList);
+		return sortedStateList;
 	}
 }
+

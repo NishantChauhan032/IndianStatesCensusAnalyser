@@ -5,33 +5,26 @@ import java.io.IOException;
 import java.io.Reader;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.Iterator;
-import java.util.stream.StreamSupport;
+import java.util.List;
 
 import com.capg.CensusAnalyserException.ExceptionType;
-import com.opencsv.bean.CsvToBean;
-import com.opencsv.bean.CsvToBeanBuilder;
+import com.opencsvbuilder.CSVBuilderFactory;
+import com.opencsvbuilder.CSVException;
+import com.opencsvbuilder.ICSVBuilder;
 
 public class StateCensusCSV {
 
-	public int loadIndiaCensusData(String STATE_CSV_DATA) throws CensusAnalyserException {
-		int numOfDataEntries = 0;
+	public List<StateCensusData> loadIndiaCensusData(String STATE_CSV_DATA) throws CensusAnalyserException {
 		try (Reader reader = Files.newBufferedReader(Paths.get(STATE_CSV_DATA));) {
-			CsvToBeanBuilder<StateCensusData> csvToBeanBuilder = new CsvToBeanBuilder<>(reader);
-			csvToBeanBuilder.withType(StateCensusData.class);
-			csvToBeanBuilder.withIgnoreLeadingWhiteSpace(true);
-			CsvToBean<StateCensusData> csvToBean = csvToBeanBuilder.build();
-			Iterator<StateCensusData> csvCensusIterator = csvToBean.iterator();
-			Iterable<StateCensusData> censusIterable = () -> csvCensusIterator;
-			numOfDataEntries = (int) StreamSupport.stream(censusIterable.spliterator(), false).count();
-			return numOfDataEntries;
+			ICSVBuilder icsvBuilder = CSVBuilderFactory.createCSVBuilder();
+			List<StateCensusData> stateCensusList = icsvBuilder.getCsvFileList(reader, StateCensusData.class);
+			return stateCensusList;
 		} catch (IOException e) {
-				throw new CensusAnalyserException(e.getMessage(), ExceptionType.FILE_NOT_FOUND);
-		}catch (IllegalStateException e) {
-				throw new CensusAnalyserException(e.getMessage(), ExceptionType.UNABLE_TO_PARSE);
-		}catch (RuntimeException e) {
-				throw new CensusAnalyserException(e.getMessage(), ExceptionType.INTERNAL_ISSUES_IN_CSV_FILE);
+			throw new CensusAnalyserException(e.getMessage(), ExceptionType.FILE_NOT_FOUND);
+		} catch (CSVException e) {
+			throw new CensusAnalyserException(e.getMessage(), ExceptionType.INTERNAL_ISSUES_IN_CSV_FILE);
+		} catch (RuntimeException e) {
+			throw new CensusAnalyserException(e.getMessage(), ExceptionType.INTERNAL_ISSUES_IN_CSV_FILE);
 		}
-		
 	}
 }
