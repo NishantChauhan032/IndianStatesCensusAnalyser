@@ -7,13 +7,13 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
+import com.capg.jsonutility.Json;
 import com.google.gson.Gson;
 
 public class StateCensusAnalyserTest {
 
 	private static final String STATE_CENSUS_DATA_CSV_FILE_PATH = "./src/test/resources/StateCensusData.csv";
 	private static final String CSV_DATA_FILE_WRONG_PATH = "./src/main/resources/StateCensusData.csv";
-	private static final String WRONG_CENSUS_CSV_FILE_PATH = "./src/test/resources/WrongDataOfCensus.csv";
 	private static final String INDIAN_CENSUS_CSV_WRONG_DELIMITER = "./src/test/resources/WrongDelimiterData.csv";
 	private static final String STATE_CODE_DATA = "./src/test/resources/StateCodeData.csv";
 	private static final String CSV_WRONG_DATA = "./src/test/resources/WrongData.csv";
@@ -135,5 +135,15 @@ public class StateCensusAnalyserTest {
 		StateCodeData[] stateCodeCSV = new Gson().fromJson(sortedStateCodeData, StateCodeData[].class);
 		assertEquals("AN", stateCodeCSV[0].getStateCode());
 		assertEquals("WB", stateCodeCSV[stateCodeCSV.length-1].getStateCode());
+	}
+	
+	@Test
+	public void givenStateCodeData_WhenSortedByPopulation_ShouldReturnSortedResult() throws CensusAnalyserException {
+		String sortedCensusData = stateCensusAnalyser.getPopulationWiseSortedCensusData(STATE_CENSUS_DATA_CSV_FILE_PATH );
+		new Json().writeList("population", sortedCensusData);
+		String readCensuslist = new Json().readList("populationData.json");
+		StateCensusData[] censusCSV = new Gson().fromJson(sortedCensusData, StateCensusData[].class);
+		StateCensusData[] censusCSVfromFile = new Gson().fromJson(readCensuslist, StateCensusData[].class);
+		assertEquals(censusCSV.length, censusCSVfromFile.length);
 	}
 }

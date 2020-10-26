@@ -1,5 +1,6 @@
 package com.capg;
 
+import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -36,6 +37,19 @@ public class StateCensusAnalyser {
 								.collect(Collectors.toList());
 		String sortedStateCodeList = new Gson().toJson(sortedStateList);
 		return sortedStateCodeList;
+	}
+	
+	public String getPopulationWiseSortedCensusData(String STATE_CENSUS_DATA) throws CensusAnalyserException {
+		List<StateCensusData> stateCensusList = new StateCensusCSV().loadIndiaCensusData(STATE_CENSUS_DATA);
+		List<StateCensusData> sortedStateCensusList = stateCensusList.stream()
+								.sorted(Comparator.comparing(StateCensusData::getPopulation))
+								.collect(Collectors.toList());
+		int index = stateCensusList.size();
+		StateCensusData[] stateCensusData = new StateCensusData[index];
+		for(StateCensusData s : sortedStateCensusList)
+			stateCensusData[--index] = s;
+		String sortedStateList = new Gson().toJson(Arrays.asList(stateCensusData));
+		return sortedStateList;
 	}
 }
 
