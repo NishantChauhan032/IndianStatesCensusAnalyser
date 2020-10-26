@@ -28,5 +28,14 @@ public class StateCensusAnalyser {
 		String sortedStateList = new Gson().toJson(sortedStateCensusList);
 		return sortedStateList;
 	}
+
+	public String getStateCodeWiseSortedData(String STATE_CODE_DATA) throws CensusAnalyserException {
+		List<StateCodeData> stateCodeList = new StatesCSV().loadIndianStateCode(STATE_CODE_DATA);
+		List<StateCodeData> sortedStateList = stateCodeList.stream()
+								.sorted(Comparator.comparing(StateCodeData::getStateCode))
+								.collect(Collectors.toList());
+		String sortedStateCodeList = new Gson().toJson(sortedStateList);
+		return sortedStateCodeList;
+	}
 }
 
